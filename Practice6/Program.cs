@@ -33,14 +33,10 @@ class Program
 
             var readLines = Parser.GetLinesFromFile(pathOfChosenFile, out var propertyNames, fileExtension,
                 numberOfLinesToPrint, numberOfLinesToSkip);
-            Console.WriteLine(
-                "The chosen file have been successfully parsed. Column names of it will be displayed on the next line"); // even doe it's not true
+            Console.WriteLine("The chosen file have been successfully parsed. Column names of it will be displayed on the next line"); // even doe it's not true
             Output.PrintPropertyNames(propertyNames);
             Console.Write("Now enter the names of columns to be displayed divided by ',' (order also matters): ");
-            var tempColumnsToDisplay =
-                Console.ReadLine()
-                    .Replace(" ",
-                        ""); // getting rid of space whitespaces. To remove all whitespaces it is needed to use either Regex.Replace or some LINQ tricks
+            var tempColumnsToDisplay = Console.ReadLine().Replace(" ", ""); // getting rid of space whitespaces. To remove all whitespaces it is needed to use either Regex.Replace or some LINQ tricks
             string[] inputPropertyNames;
             if (tempColumnsToDisplay == "*")
             {
