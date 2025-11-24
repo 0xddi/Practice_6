@@ -1,6 +1,6 @@
 ﻿using System.Dynamic;
 
-namespace Practice5;
+namespace Practice6;
 
 public static class Parser
 {
@@ -34,10 +34,10 @@ public static class Parser
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.Message + ". Couldn't read the file at some point.");
         }
         
-        if (!lines.Any()) throw new Exception("Could not read the chosen file");
+        if (!lines.Any()) throw new Exception("The file has ended before skipping/printing the supposed amount of lines");
         
         return lines;
     }

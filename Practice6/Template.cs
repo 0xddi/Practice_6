@@ -1,4 +1,4 @@
-﻿namespace Practice5;
+﻿namespace Practice6;
 
 public static class Template
 {

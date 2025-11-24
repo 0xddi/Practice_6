@@ -1,4 +1,4 @@
-﻿namespace Practice5;
+﻿namespace Practice6;
 
 public enum FileExtension
 {
@@ -7,7 +7,7 @@ public enum FileExtension
 }
 
 
-public static class TemporaryName
+public static class FileExtensionMethods
 {
     public static FileExtension GetFileExtension(string filePath)
     {

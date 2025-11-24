@@ -1,4 +1,4 @@
-﻿namespace Practice5;
+﻿namespace Practice6;
 
 public static class Output
 {
@@ -6,7 +6,7 @@ public static class Output
     {
         foreach (var columnName in desiredColumnsInOrder)
         {
-            Console.Write(columnName + "\t");
+            Console.Write(columnName.PadRight(30) + "|");
         }
         Console.WriteLine();
         
@@ -14,7 +14,7 @@ public static class Output
         {
             foreach (var column in desiredColumnsInOrder)
             {
-                Console.Write(line[column] + "\t");
+                Console.Write(line[column].ToString().PadRight(30) + "|");
             }
             Console.WriteLine();
         }
