@@ -2,24 +2,6 @@
 
 public static class Output
 {
-    public static void PrintParsedLines(List<IDictionary<string, object>> parsedLines, string[] desiredColumnsInOrder)
-    {
-        foreach (var columnName in desiredColumnsInOrder)
-        {
-            Console.Write(columnName.PadRight(30) + "|");
-        }
-        Console.WriteLine();
-        
-        foreach (var line in parsedLines)
-        {
-            foreach (var column in desiredColumnsInOrder)
-            {
-                Console.Write(line[column].ToString().PadRight(30) + "|");
-            }
-            Console.WriteLine();
-        }
-    }
-
     public static void PrintDictionaryOfFilesFromDirectory(Dictionary<int, string> filesDictionary) 
     {
         foreach (KeyValuePair<int, string> file in filesDictionary)
@@ -28,11 +10,18 @@ public static class Output
         }
     }
 
-    public static void PrintPropertyNames(string[] propertyNames)
+    public static void PrintColumnNames(string[] templateForColumns, bool isPaddingNeeded)
     {
-        foreach (string propertyName in propertyNames)
+        foreach (string columnName in templateForColumns)
         {
-            Console.Write(propertyName + " | ");
+            if (isPaddingNeeded)
+            {
+                Console.Write(columnName.PadRight(30) + " | ");
+            }
+            else
+            {
+                Console.Write(columnName + " | ");
+            }
         }
         Console.WriteLine();
     }

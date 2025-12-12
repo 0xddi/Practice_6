@@ -6,53 +6,25 @@ class Program
     {
         try
         {
-            Console.Write("Enter a path to a directory: ");
-            var inputPathToDirectory = Console.ReadLine().Trim('"');
-            if (!Input.ValidatePathToDirectory(inputPathToDirectory)) throw new Exception("Invalid path");
+            var inputPathToDirectory = Input.SpawnInputPathOfDirectory();
 
             var dictionaryOfDirectoryFiles = Parser.ParseDirectory(inputPathToDirectory);
-            Output.PrintDictionaryOfFilesFromDirectory(dictionaryOfDirectoryFiles);
-            Console.Write("Enter the number of file to be parsed: ");
-            var chosenNumberOfFileAsKey = int.Parse(Console.ReadLine());
-            if (!Input.ValidateChosenNumberOfFile(chosenNumberOfFileAsKey, dictionaryOfDirectoryFiles))
-                throw new Exception("Invalid number of file");
-            var pathOfChosenFile = dictionaryOfDirectoryFiles[chosenNumberOfFileAsKey];
+      
+            var pathOfChosenFile = Input.SpawnInputChooseFileFromDirectory(dictionaryOfDirectoryFiles);
 
             var fileExtension = FileExtensionMethods.GetFileExtension(pathOfChosenFile);
+            
+            var numberOfLinesToSkip = Input.SpawnInputNumberOfLinesToSkip();
+            
+            var numberOfLinesToPrint = Input.SpawnInputNumberOfLinesToPrint();
 
-            Console.Write("Enter the number of lines to be skipped: ");
-            var tempStoreForSkip = Console.ReadLine();
-            if (!Input.ValidateNumberOfLines(tempStoreForSkip)) throw new Exception("Invalid number of lines to skip");
-            var numberOfLinesToSkip = int.Parse(tempStoreForSkip);
+            var allColumns = Parser.GetNamesForColumns(pathOfChosenFile, fileExtension);
+            Output.PrintColumnNames(allColumns, false);
 
-            Console.Write("Enter the number of lines to print: ");
-            var tempStoreForLinesToPrint = Console.ReadLine();
-            if (!Input.ValidateNumberOfLines(tempStoreForLinesToPrint))
-                throw new Exception("Invalid number of lines to skip");
-            var numberOfLinesToPrint = int.Parse(tempStoreForLinesToPrint);
+            var chosenColumns = Input.SpawnInputChosenColumns(allColumns);
 
-            var readLines = Parser.GetLinesFromFile(pathOfChosenFile, out var propertyNames, fileExtension,
-                numberOfLinesToPrint, numberOfLinesToSkip);
-            Console.WriteLine("The chosen file have been successfully parsed. Column names of it will be displayed on the next line"); // even doe it's not true
-            Output.PrintPropertyNames(propertyNames);
-            Console.Write("Now enter the names of columns to be displayed divided by ',' (order also matters): ");
-            var tempColumnsToDisplay = Console.ReadLine().Replace(" ", ""); // getting rid of space whitespaces. To remove all whitespaces it is needed to use either Regex.Replace or some LINQ tricks
-            string[] inputPropertyNames;
-            if (tempColumnsToDisplay == "*")
-            {
-                inputPropertyNames = propertyNames;
-            }
-            else
-            {
-                if (!Input.ValidateChosenColumns(tempColumnsToDisplay, propertyNames))
-                    throw new Exception("Invalid names of columns");
-                inputPropertyNames = tempColumnsToDisplay.Split(',');
-            }
-
-
-            var parsedLines = Parser.ParseLines(readLines, fileExtension, propertyNames);
-
-            Output.PrintParsedLines(parsedLines, inputPropertyNames);
+            Parser.GetAndPrintLinesFromFile(pathOfChosenFile, fileExtension, numberOfLinesToPrint, chosenColumns, numberOfLinesToSkip);
+            
 
         }
         catch (Exception ex)

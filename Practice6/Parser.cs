@@ -4,30 +4,34 @@ namespace Practice6;
 
 public static class Parser
 {
-    public static List<string> GetLinesFromFile(string filePath, out string[] propertyNames, FileExtension fileExt,  int numberOfLinesToPrint, int numberOfLinesToSkip = 0)
+    public static void GetAndPrintLinesFromFile(string filePath, FileExtension fileExt,  int numberOfLinesToPrint, string[] neededColumns, int numberOfLinesToSkip = 0)
     {
-        List<string> lines = new();
-        propertyNames = null; // some value needs to be assigned before exiting method
+        char separatorChar = fileExt.GetSeparatorChar();
+        
+        
         try
         {
             using (StreamReader sr = new StreamReader(filePath))
             {
                 string line;
+                string[]? templateForColumns = null;
                 int lineCounter = 0;
-                while ((line = sr.ReadLine()) is not null && lineCounter < numberOfLinesToPrint + numberOfLinesToSkip + 1)
+                while ((line = sr.ReadLine()!) is not null && lineCounter < numberOfLinesToPrint + numberOfLinesToSkip + 1)
                 {
                     if (lineCounter == 0)
                     {
-                        propertyNames = Template.GetTemplateForProperties(line, fileExt);
+                        templateForColumns = Template.GetTemplateForColumns(line, fileExt);
+                        Output.PrintColumnNames(neededColumns, true);
+                        Console.WriteLine(string.Concat(Enumerable.Repeat("-", 33 * neededColumns.Length - 1)));
                         lineCounter++;
                         continue;
                     }
 
                     if (lineCounter > numberOfLinesToSkip)
                     {
-                        lines.Add(line);
+                        var lineDividedByColumns = new LineWithColumns(line, templateForColumns!, neededColumns, separatorChar);
+                        Console.WriteLine(lineDividedByColumns);
                     }
-                    
                     lineCounter++;
                 }
             }
@@ -36,31 +40,15 @@ public static class Parser
         {
             Console.WriteLine(ex.Message + ". Couldn't read the file at some point.");
         }
-        
-        if (!lines.Any()) throw new Exception("The file has ended before skipping/printing the supposed amount of lines");
-        
-        return lines;
     }
-    
-    
-    
-    public static List<IDictionary<string, object>> ParseLines(List<string> lines, FileExtension fileExt, string[] propertyNames)
+
+    public static string[] GetNamesForColumns(string pathToFile, FileExtension fileExt)
     {
-        int lengthOfPropertyNames = propertyNames.Length;
-        List<IDictionary<string, object>> parsedLines = new();
-        
-        foreach (string line in lines)
+        char separatorChar = fileExt.GetSeparatorChar();
+        using (StreamReader sr = new StreamReader(pathToFile))
         {
-            var propertyValues = line.Split(fileExt.GetSeparatorChar());
-            dynamic expando = new ExpandoObject();
-            var lineDictionary = new Dictionary<string, object>();
-            for (int i = 0; i < lengthOfPropertyNames; i++)
-            {
-                lineDictionary.Add(propertyNames[i], propertyValues[i]);
-            }
-            parsedLines.Add(lineDictionary);
+            return sr.ReadLine()!.Split(separatorChar);
         }
-        return parsedLines;
     }
 
     public static Dictionary<int, string> ParseDirectory(string pathToDirectory)
