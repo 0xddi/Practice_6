@@ -1,6 +1,4 @@
-﻿using System.Dynamic;
-
-namespace Practice6;
+﻿namespace Practice6;
 
 public static class Parser
 {

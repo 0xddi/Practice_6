@@ -4,8 +4,11 @@ public static class ExtensionMethods
 {
     public static char GetSeparatorChar(this FileExtension fileExtension)
     {
-        if (fileExtension == FileExtension.Csv) return ';';
-        if (fileExtension == FileExtension.Tsv) return '\t';
-        throw new Exception("Unsupported file extension");
+        switch (fileExtension)
+        {
+            case FileExtension.Csv: return ';';
+            case FileExtension.Tsv: return '\t';
+            default: throw new Exception($"Unsupported file extension: {fileExtension}");
+        }
     }
 }
